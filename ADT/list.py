@@ -39,6 +39,7 @@ def newList (datastructure='SINGLE_LINKED', cmpfunction=None):
     Raises:
         Exception
     """
+    
     try:
         lst = lt.newList(datastructure, cmpfunction)
         return lst
