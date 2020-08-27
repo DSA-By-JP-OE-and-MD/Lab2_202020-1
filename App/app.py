@@ -32,6 +32,7 @@ import csv
 from ADT import list as lt
 from DataStructures import listiterator as it
 from DataStructures import liststructure as lt
+from Sorting import shellsort as Sh
 
 from time import process_time 
 
@@ -49,8 +50,8 @@ def loadCSVFile (file, sep=";"):
         Borra la lista e informa al usuario
     Returns: None  
     """
-    #lst = lt.newList("ARRAY_LIST") #Usando implementacion arraylist
-    lst = lt.newList() #Usando implementacion linkedlist
+    lst = lt.newList("ARRAY_LIST") #Usando implementacion arraylist
+    #lst = lt.newList() #Usando implementacion linkedlist
     print("Cargando archivo ....")
     t1_start = process_time() #tiempo inicial
     dialect = csv.excel()
@@ -129,7 +130,8 @@ def countElementsByCriteria(criteria, lst, lst2):
                     Man = lt.getElement(lst, n)
                     if ide == Man["id"]:
                         total +=1
-                        Min.append({Man["original_title"]:Man["vote_average"]})
+                        ele = {Man["original_title"]:Man["vote_average"]}
+                        Min.append(ele)
                         calificacion += float(Man["vote_average"])
                     n += 1
             a += 1
@@ -143,30 +145,45 @@ def orderElementsByCriteria(function, column, lst, elements):
     Retorna una lista con cierta cantidad de elementos ordenados por el criterio
     """
     return 0
+def high_vote_count(ele1, ele2):
+    if int(ele1["vote_count"]) > int(ele2["vote_count"]):
+        return True
+    return False
+
+def less_vote_average(ele1, ele2):
+    if float(ele1["vote_average"]) < float(ele2["vote_average"]):
+        return True
+    return False
+
 
 def BestoPeliculas(lst):
     if lst["size"]==0:
         print("La lista esta vacia")
     else:
-        Monik = []
-        Sorteo = []
-        i = 1
-        while i <= lst["size"]:
-            Monika = lt.getElement(lst,i)
-            N = Monika["vote_count"]
-            M = Monika["original_title"]
-            Monik.append({M:N})
-            Sorteo.append(N)
-            i += 1
-        Sorteo.sort(reverse=True)
+        Datos1 = []
+        Datos2 = []
+        ava = lst
+        Sh.shellSort(ava, high_vote_count)
+        B = 1
+        Coco = it.newIterator(ava)
+        while it.hasNext(Coco) and B < 11:
+            Mina = it.next(Coco)
+            S = [Mina["original_title"],":", Mina["vote_count"]]
+            Datos1.append(S)
+            B += 1
 
+        vc = lst
+        Sh.shellSort(vc, less_vote_average)
+        A = 1
+        Menhe = it.newIterator(vc)
+        while it.hasNext(Menhe) and A < 6:
+            Alta = it.next(Menhe)
+            N = [Alta["original_title"], Alta["vote_average"]]
+            Datos2.append(N)
+            A +=1
+    print("Las mejores peliculas por conteo de votos son: \n",Datos1, "Y las peores por promedio son: \n", Datos2)
+    
 
-
-            
-
-
-            
-    return Monik
 def main():
     """
     Método principal del programa, se encarga de manejar todos los metodos adicionales creados
@@ -179,7 +196,7 @@ def main():
     lista2 = lt.newList()
     while True:
         printMenu() #imprimir el menu de opciones en consola
-        inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
+        inputs =input('Seleccione una opción para continuar\n')
         if len(inputs)>0:
             if int(inputs[0])==1: #opcion 1
                 #file = input("Escriba el nombre del archivo: ")
@@ -210,7 +227,7 @@ def main():
                 if lista==None or lista["size"]==0:
                     print("La lista esta vacia mi colta")
                 else:
-                    print (BestoPeliculas(lista))
+                    BestoPeliculas(lista)
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
                 
