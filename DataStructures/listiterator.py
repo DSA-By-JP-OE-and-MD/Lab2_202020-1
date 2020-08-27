@@ -37,7 +37,7 @@ def newIterator(lst):
     Returns:
         Un iterador para la lista
     """
-    if (lst['type'] == 'ARRAY_LIST'):
+    if (lst["type"] == "ARRAY_LIST"):
         return ait.newIterator(lst)
     else:
         return lit.newIterator (lst)
