@@ -79,6 +79,8 @@ def printMenu():
     print("3- Contar elementos filtrados por palabra clave")
     print("4- Consultar elementos a partir de dos listas")
     print("5- Consultar las 10 mejores y peores peliculas por votos")
+    print("6- Consultar informacion de un actor")
+    print("7- Consultar peliculas por genero")
     print("0- Salir")
 
 def countElementsFilteredByColumn(criteria, column, lst):
@@ -160,6 +162,7 @@ def BestoPeliculas(lst):
     if lst["size"]==0:
         print("La lista esta vacia")
     else:
+        time1 = process_time()
         Datos1 = []
         Datos2 = []
         ava = lst
@@ -181,8 +184,68 @@ def BestoPeliculas(lst):
             N = [Alta["original_title"], Alta["vote_average"]]
             Datos2.append(N)
             A +=1
-    print("Las mejores peliculas por conteo de votos son: \n",Datos1, "Y las peores por promedio son: \n", Datos2)
-    
+        time2 = process_time()
+    print("Las mejores peliculas por conteo de votos son: \n",Datos1, "Y las peores por promedio son: \n", Datos2,"\n Tiempo de proceso: ",time2-time1)
+
+
+def dame_tu_autografo(lst, lst2, actor):
+    if lst["size"] == 0 or lst2["size"]==0:
+        print("Una de las listas esta vacia")
+    else:
+        Datos = []
+        idPelis = []
+        directores = {}
+        conteo = 0
+        mayor = 0
+        name = None
+        prom = 0
+        A = 1
+        time1 = process_time()
+        while A < 6:
+            Banri = it.newIterator(lst2)
+            while it.hasNext(Banri):
+                tada = it.next(Banri)
+                A = str(A)
+                if tada["actor"+A+"_name"] == actor:
+                    idPelis.append(tada["id"])
+                    conteo += 1
+                    if tada["director_name"] in directores:
+                        directores[tada["director_name"]] +=1
+                    else:
+                        directores[tada["director_name"]] = 1
+            A = int(A)
+            A += 1
+        for Monika in idPelis:
+            deku = it.newIterator(lst)
+            while it.hasNext(deku):
+                bakugo = it.next(deku)
+                if bakugo["id"] == Monika:
+                    Datos.append(bakugo["original_title"])
+                    prom += float(bakugo["vote_average"])
+        for sayori in directores:
+            if directores[sayori] > mayor:
+                mayor = directores[sayori]
+                name = sayori
+        prom = round(prom/conteo, 1)
+        time2 = process_time()
+    print ("El actor",actor,"participo en",conteo,"peliculas:\n",Datos,"\nLa calificación promedio de sus peliculas es:",prom,"\n y colaboro mas con el director:",name,"\n Tiempo de procesado:",time2-time1,"segundos")
+
+def peliculas_por_genero(lst, genero):
+    a =[]
+    conteo = 0
+    prom = 0
+    time1 =process_time()
+    doki = it.newIterator(lst)
+    while it.hasNext(doki):
+        waku = it.next(doki)
+        if genero in waku["genres"]:
+            a.append(waku["original_title"])
+            prom += float(waku["vote_average"])
+            conteo += 1
+    prom = round(float(prom/conteo),1)
+    time2 = process_time()
+    print("Las peliculas con el genero",genero,"son:\n",a,"\ncon un promedio total de:",prom,"\nEl tiempo promedio es: ",time2-time1)
+
 
 def main():
     """
@@ -207,27 +270,43 @@ def main():
                 print("Datos cargados, ",lista['size']," elementos cargados")
                 print("Datos cargados, ",lista2['size']," elementos cargados")
             elif int(inputs[0])==2: #opcion 2
-                if lista==None or lista['size']==0: #obtener la longitud de la lista
-                    print("La lista esta vacía")    
-                else: print("La lista tiene ",lista['size']," elementos")
+                    a = input("¿De cual lista quiere saber el tamaño?(Details:lista, Casting:lista2")
+                    if a == "lista": 
+                        print("La lista tiene",lista["size"],"elementos")#obtener la longitud de la lista
+                    elif a == "lista2":
+                        print("La lista tiene",lista2["size"],"elementos")#obtener la longitud de la lista
+                    elif a != "lista" and a != "lista2":
+                        print("Eliga una de las listas predispuestas")
             elif int(inputs[0])==3: #opcion 3
-                if lista==None or lista['size']==0: #obtener la longitud de la lista
+                if lista==None or lista['size']==0 or lista2['size']==0: #obtener la longitud de la lista
                     print("La lista esta vacía")
                 else:   
                     criteria =input('Ingrese el criterio de búsqueda\n')
                     counter=countElementsFilteredByColumn(criteria, "nombre", lista) #filtrar una columna por criterio  
                     print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
-                if lista==None or lista['size']==0: #obtener la longitud de la lista
+                if lista==None or lista['size']==0 or lista['size']==0: #obtener la longitud de la lista
                     print("La lista esta vacía")
                 else:
                     criteria =input('Ingrese el criterio de búsqueda\n')
-                    counter=countElementsByCriteria(criteria,lista, lista2)
+                    counter=countElementsByCriteria(criteria, lista, lista2)
             elif int(inputs[0])==5:
-                if lista==None or lista["size"]==0:
+                if lista==None or lista["size"]==0 or lista2['size']==0:
                     print("La lista esta vacia mi colta")
                 else:
                     BestoPeliculas(lista)
+            elif int(inputs[0])==6:
+                if lista==None or lista['size']==0: #obtener la longitud de la lista
+                    print("La lista esta vacía")
+                else: 
+                    actor = input("Nombre del actor que desea conocer: ")
+                    dame_tu_autografo(lista, lista2, actor)
+            elif int(inputs[0])==7:
+                if lista==None or lista['size']==0: #obtener la longitud de la lista
+                    print("La lista esta vacía")
+                else: 
+                    genero = input("Nombre del genero: ")
+                    peliculas_por_genero(lista, genero)
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
                 
