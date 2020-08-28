@@ -244,7 +244,7 @@ def peliculas_por_genero(lst, genero):
             conteo += 1
     prom = round(float(prom/conteo),1)
     time2 = process_time()
-    print("Las peliculas con el genero",genero,"son:\n",a,"\ncon un promedio total de:",prom,"\nEl tiempo promedio es: ",time2-time1)
+    print("Las peliculas con el genero",genero,"son en total:",conteo,"\n",a,"\ncon un promedio total de:",prom,"\nEl tiempo promedio es: ",time2-time1,"segundos")
 
 
 def main():
